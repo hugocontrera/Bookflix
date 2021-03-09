@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4 text-center">Administración de Vistas Previas</h1>
+        <p class="lead">
+            Desde aquí podrás administrar las Vistas previas en el sistema. Por lo tanto
+            las acciones de Ver, Editar, Crear y Eliminar vistas previas se harán desde acá.
+        </p>
+
+        <hr class="my-4">
+
+        <div class="text-right">
+            <p>¡Desde aquí puedes ir a un formulario para añadir nuevas Vistas previas!</p>
+            <a class="btn btn-success btn-lg" href="{{ url_for('vista_previa_new') }}" role="button">
+                Crear una vista previa
+                <i class="material-icons" style="vertical-align:middle">add_to_queue</i>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div class="container p-5">
+    {% if not vistas_previas %}
+    <h1>Parece que todavía no hay vistas previas cargadas en el sistema, ¡intenta cargar alguna!</h1>
+    {% else %}
+    <table class="table table-striped">
+        {% if mensajes %}
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                    {% for mensaje in mensajes %}
+                    <li>{{ mensaje }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Activa</th>
+                <th scope="col" colspan="3">Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for vista_previa in vistas_previas %}
+            <tr>
+                <th scope="row">{{ vista_previa.id }}</th>
+                <td>{{ vista_previa.nombre }}</td>
+                <td>{{ vista_previa.descripcion }}</td>
+                <td>
+                    {% if vista_previa.activa == 1 %}
+                    Habilitado
+                    {% else %}
+                    Deshabilitado
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="material-icons btn btn-primary disabled" title="Ver" href="#">visibility</a>
+                </td>
+                <td>
+                    <a class="material-icons btn btn-info" title="Editar"
+                        href="{{ url_for('vista_previa_modificar', id=vista_previa.id) }}">edit</a>
+                </td>
+                <td>
+                    <a class="material-icons btn btn-danger" title="Eliminar"
+                        href="{{ url_for('vista_previa_eliminar', id=vista_previa.id) }}">delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+{% endblock %}

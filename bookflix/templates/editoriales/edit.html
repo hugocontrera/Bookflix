@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Editar una editorial</h1>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="card mx-auto m-5" style="width: 40rem;">
+		<div class="card-header">
+			<h1 class="card-title">Editar una editorial</h1>
+		</div>
+		
+		<div class="card-body">
+			<span class="card-text">
+				<form method="POST">
+					{% if errores %}
+					<div class="alert alert-danger" role="alert">
+						<ul>
+							{% for error in errores %}
+							<li>{{ error }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					{% endif %}
+
+					<section class="form-group">
+						<label for="nombre"> Título </label>
+						<input type="text" class="form-control form-control-lg rounded-0" name="nombre"
+							id="nombre" required value="{{editorial.nombre}}">
+					</section>
+
+					<section class="form-group">
+						<label for="id"> </label>
+						<input type="hidden" class="form-control form-control-lg rounded-0" name="id"
+							id="id" required value="{{editorial.id}}">
+					</section>
+
+					<div class="text-right">
+						<a href="{{ url_for('editorial_index') }}" class="btn btn-white">Cancelar</a>
+						<button type="submit" class="btn btn-primary">Modificar</button>
+					</div>
+				</form>
+			</span>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

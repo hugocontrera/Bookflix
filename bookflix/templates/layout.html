@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <!-- Metadatos -->
+        <meta charset="UTF-8">
+        
+        <!-- Estilos -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='../static/CSS/bootstrap.css')}}" />
+        
+        <!-- JavaScript -->
+        <script src="{{ url_for('static', filename='../static/JS/jquery.min.js')}}"></script>
+        <script src="{{ url_for('static', filename='../static/JS/bootstrap.js')}}"></script>
+        <script src="{{ url_for('static', filename='../static/JS/bootstrap.bundle.js')}}"></script>
+        
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo.png') }}">
+
+        <!-- Iconos -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="CSS/materialize.css"  media="screen,projection"/>
+        
+        <link rel="stylesheet" href="../../static/CSS/estilos.css">
+        <!-- Título -->
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+
+    <body>
+        <!-- Header -->
+        {% block header %}
+            {% include '/header.html' %}
+        {% endblock %}
+
+        {% block content %}
+            
+        {% endblock %}
+        
+        <!-- Footer -->
+        {% block footer %}
+            {% include '/footer.html' %}
+        {% endblock %}
+
+        <!--JavaScript at end of body for optimized loading-->
+        <script type="text/javascript" src="JS/materialize.min.js"></script>
+    </body>
+</html>

@@ -1,0 +1,150 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+
+<!-- <div>
+		<h1 class="text-center py-5">Bookflix</h1>
+		<div class="container pb-5">
+			<hr>
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse et commodo tellus,
+			eu condimentum ex. Aenean luctus ultricies nibh, eu consectetur magna accumsan non.
+			Praesent pretium tortor ligula, vitae venenatis metus iaculis id. Aenean sed pharetra urna.
+			Ut sit amet arcu vel purus varius sollicitudin ac quis nisl. Fusce placerat consectetur
+			dolor, quis rutrum augue feugiat vitae. Donec vel dictum nibh, vitae maximus risus.
+			Suspendisse potenti.
+			<br>
+
+			Integer ipsum libero, efficitur ac erat non, mattis sollicitudin magna. Ut euismod
+			convallis suscipit. Morbi id suscipit libero, at efficitur eros. Phasellus turpis metus,
+			consequat ac euismod sit amet, eleifend id mi. Morbi id ex id arcu ultricies luctus.
+			Fusce in nulla massa. Suspendisse rutrum semper luctus. Aenean at turpis urna. Vivamus
+			diam dolor, posuere a arcu id, tincidunt lacinia nibh.
+			<br>
+
+			Maecenas luctus dolor nec nunc lobortis vehicula. Aenean libero sapien, venenatis sit amet
+			dolor mattis, ornare malesuada quam. Sed mi arcu, hendrerit sed ullamcorper ut, pharetra
+			id nulla. Donec consequat, dolor id pharetra luctus, lorem diam dignissim ex, eget
+			bibendum mi nisl sed dui. Nulla accumsan odio libero. Suspendisse potenti. In pulvinar
+			sodales mi, volutpat vestibulum risus porta eget. Pellentesque orci dolor, condimentum
+			et lorem quis, pulvinar volutpat metus. Quisque nec risus quis sem viverra finibus sit
+			amet dictum magna. Nullam nisl mi, maximus eget fringilla ultrices, rhoncus quis mi.
+			Vestibulum fermentum rutrum euismod. Maecenas gravida leo nisl, sit amet volutpat
+			felis tincidunt id. Donec vulputate justo nec magna interdum, nec fermentum elit
+			auctor. Nunc maximus et magna in dictum. Sed id lorem ac nisl sodales egestas
+			vitae id quam. Donec ac metus metus.
+			<br>
+
+			Praesent id quam non risus sollicitudin suscipit vitae non quam. Curabitur neque eros,
+			porta nec purus quis, dictum consequat elit. Vestibulum luctus vehicula justo congue
+			imperdiet. Mauris faucibus vitae augue sed feugiat. Suspendisse interdum orci at quam
+			aliquam maximus. Nulla condimentum tristique ipsum, ac mattis arcu laoreet vitae. Sed
+			vehicula vehicula ullamcorper. Cras vulputate ligula nec lorem dignissim, sodales
+			ultricies massa efficitur. Integer scelerisque congue mi, id auctor urna fringilla ac.
+			<br>
+
+			Vivamus non odio in orci vulputate placerat. Sed at facilisis enim, ut rhoncus ligula.
+			Nunc vitae aliquet nisl. Nulla non sapien maximus, aliquet risus ac, ultrices eros. Aenean
+			molestie dui ut tempor fermentum. Ut bibendum suscipit gravida. Quisque mattis ligula
+			ut leo vulputate consequat. Ut tincidunt fringilla risus. Nam elementum mauris vitae
+			iaculis pulvinar. Nullam placerat leo a dui luctus, eu porttitor magna congue.
+			Suspendisse potenti.
+			<br>
+		</div>
+	</div> -->
+
+{% if not session['id'] %}
+<div class="text-center" style="background-color: #000000">
+	<div style="background-image: url('./static/img/libros_background_3.jpg');
+			padding-top: 200px;
+			padding-bottom: 200px;">
+		<font color="white">
+			<h1>Libros y estrenos sin límite y mucho más.</h1>
+			<h3>Disfruta donde quieras. Cancela en cualquier momento.</h3>
+		</font>
+		<a href="{{ url_for('register') }}" class="btn btn-danger">
+			<h2>REGISTRARSE</h2>
+		</a>
+
+	</div>
+
+
+	<div class="p-1" style="background-color: #000000">
+		<a href="{{ url_for('ver_anuncio') }}" class="btn btn-danger">
+			<h2>Anuncios</h2>
+		</a>
+	</div>
+
+
+	<div class="p-1" style="background-color: #262626;"></div>
+
+	{% for libro in libros %}
+	<font color="white">
+		<div class="container p-2">
+			<div class="card mx-auto m-5" style="width: 40rem;">
+				<div class="card-header" style="background-color: #000000;">
+					<h1 class="card-title text-center">{{libro.nombre}}</h1>
+				</div>
+
+				<div class="card-body" style="background-color: #000000;">
+					<p> <b>ISBN:</b> {{libro.isbn}} </p>
+					{% for editorial in editoriales %}
+					{% if libro.editorial == editorial.id %}
+					<p> <b>Editorial:</b> {{editorial.nombre}} </p>
+					{% endif%}
+					{% endfor%}
+
+					{% for autor in autores %}
+					{% if libro.autor == autor.id %}
+					<p> <b>Autor:</b> <a href="{{ url_for('autor', autor_id=autor.id) }}"> {{autor.nombre}} </a></p>
+					{% endif %}
+					{% endfor%}
+
+					{% for genero in generos %}
+					{% if libro.genero == genero.id %}
+					<p> <b>Genero:</b> {{genero.nombre}} </p>
+					{% endif %}
+					{% endfor%}
+
+					{% if session.admin %}
+					{% if libro.activo %}
+					<p><b>Estado:</b> Habilitado</p>
+					{% else %}
+					<p><b>Estado:</b> Deshabilitado</p>
+					{% endif %}
+					{% endif %}
+					<hr>
+
+					<div class="text-center">
+						<h2> Portada </h2>
+						<a href="{{libro.ruta_img}}">
+							<img src="{{libro.ruta_img}}" alt="Smiley face" width="250px" height="300px">
+						</a>
+					</div>
+					<hr>
+
+					<p> <b>Sinopsis:</b> {{libro.sinopsis}}</b></p>
+					<hr>
+					<!-- <h2 class="text-center"><a href="{{libro.ruta}}"> Leer </a></h2> -->
+					<h2 class="text-center"><a href="#"> Leer (Proximamente) </a></h2>
+				</div>
+			</div>
+		</div>
+	</font>
+	<div class="p-1" style="background-color: #262626;"></div>
+	{% endfor %}
+
+</div>
+{% else %}
+AHORA HAY QUE MOSTRAR LIBROS
+<div class="m-5 p-5">
+	<a href="/ver_catalogo" class="btn btn-danger"> Ver Catalogo </a>
+</div>
+{% endif %}
+
+{% endblock %}

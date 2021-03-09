@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Crear un nuevo anuncio</h1>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="card mx-auto m-5" style="width: 40rem;">
+		<div class="card-header">
+			<h1 class="card-title">Agregar un nuevo anuncio</h1>
+		</div>
+		
+		<div class="card-body">
+			<span class="card-text">
+				<form method="POST" enctype="multipart/form-data">
+					<section class="form-group">
+						<label for="titulo"> Título </label>
+						<input type="text" class="form-control form-control-lg rounded-0" name="titulo"
+							id="titulo" required>
+					</section>
+
+					<section class="form-group">
+						<label for="contenido"> Contenido </label>
+						<textarea type="text" class="form-control form-control-lg rounded-0" name="contenido"
+							id="contenido" required></textarea>
+					</section>
+
+					<section class="form-group">
+						<label for="fecha_de_publicacion"> Fecha de Publicación </label>
+						<input type="date" class="form-control form-control-lg rounded-0" name="fecha_de_publicacion"
+							id="fecha_de_publicacion" required value="{{fecha_de_hoy}}">
+					</section>
+
+					<section class="form-group">
+						<label for="imagen"> Imagen (opcional) </label>
+						<input type="file" class="form-control form-control-lg rounded-0" name="imagen"
+							id="imagen">
+					</section>
+
+					<div class="text-right">
+						<a href="{{ url_for('anuncio_index') }}" class="btn btn-white">Cancelar</a>
+						<button type="submit" class="btn btn-primary">Aceptar</button>
+					</div>
+				</form>
+			</span>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

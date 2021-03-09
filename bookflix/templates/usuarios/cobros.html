@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Administracion de cobros</h1>
+		<p class="lead">
+			Desde aqui podras administrar los Cobros en el sistema. Por lo tanto
+			la accion de Cobrar se hara desde aca.
+		</p>
+
+		<hr class="my-4">
+
+		<div class="text-right">
+			<p>!Desde aqui puedes cobrar a todos los usuarios!</p>
+			<a class="btn btn-success btn-lg" href="{{ url_for('cobro_all') }}" role="button">
+				Cobrar
+				<i class="material-icons" style="vertical-align:middle">add_to_queue</i>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div class="container p-5">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Email</th>
+				<th scope="col">Numero de Tarjeta</th>
+				<th scope="col">Ultimo pago</th>
+				<th scope="col">Cobro exitoso</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			{% for usuario in usuarios %}
+			<tr>
+				<th scope="row">{{ usuario.id }}</th>
+				<td>{{ usuario.email }}</td>
+				<td>{{ usuario.tarjetaNumero }}</td>
+				<td>
+					{% if usuario.ultimo_pago %}
+					{{ usuario.ultimo_pago }}
+					{% else %}
+					-
+					{% endif %}
+				</td>
+				<td>
+					{% if usuario.tarjeta_valida == 1 %}
+					Si
+					{% else %}
+					No
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

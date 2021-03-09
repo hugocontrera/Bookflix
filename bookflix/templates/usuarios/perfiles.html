@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+
+{{ super() }}
+
+{% endblock %}
+
+{% block content %}
+
+<body class="fondo">
+
+    <div class="conteiner">
+        {% if not perfiles %}
+        <h1>Todavia no hay ningun perfil creado!!</h1>
+        <div class="text-center">
+			{% if perfiles|length < plan.perfiles_max %}
+            <a href="/crear_perfil/{{ usuario.id }}" class="btn btn-danger"> Crear Perfil </a>
+			{% endif %}
+            <a href="{{ url_for('logout') }}" class="btn btn-danger"> Salir </a>
+        </div>
+        {% else %}
+        <h1 class="titulo text-center pt-5 mt-5"> ¿Quién esta ingresando ahora? </h1>
+        <div class="row justify-content-center align-items-center text-center pt-3 m-5">
+            {% for perfil in perfiles %}
+            <div class="col-md-2 mr-4 text-center">
+                <a href="{{ url_for('perfil', perfil_id=perfil.id) }}" class="perfil"> <img src="{{ perfil.foto }}" class="img1" width="130px"
+                        alt=""></a>
+                <p class="text-center">{{ perfil.nombre }}</p>
+                <a href="/modificar_perfil/{{ perfil.id }}" class="btn btn-danger"> Modificar Perfil </a>
+                <a href="/eliminar_perfil/{{ perfil.id }}" class="btn btn-danger"> Eliminar </a>
+            </div>
+            {% endfor %}
+
+
+        </div>
+        <div class="text-center">
+			{% if perfiles|length < plan.perfiles_max %}
+            <a href="/crear_perfil/{{ usuario.id }}" class="btn btn-danger"> Crear Perfil </a>
+			{% endif %}
+            <a href="{{ url_for('logout') }}" class="btn btn-danger"> Salir </a>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+{% endblock %}

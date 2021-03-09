@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="conteiner">
+  <h1 class="titulo text-center pt-5 mt-5"> Modificar Perfil </h1>
+  <div class="col-md-2 mr-4 text-center">
+    <a href="#" class="perfil"> <img src="{{ perfil.foto }}" class="img1" width="130px" alt=""></a>
+    <p class="text-center">{{ perfil.foto }}</p>
+    <p class="text-center">{{ perfil.nombre }}</p>
+  </div>
+  <div>
+    <form action="/modificar_perfil/{{ perfil.id }}" method="POST" class="titulo text-center pt-5 mt-5">
+      {% if errores %}
+      <div class="alert alert-danger" role="alert">
+        <ul>
+          {% for error in errores %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <input type="text" name="nombre" placeholder="Nuevo Nombre" required value="{{nombre}}">
+      <select name="foto">
+        <option>../../static/img/img1.png</option>
+        <option>../../static/img/img2.png</option>
+        <option>../../static/img/img3.png</option>
+        <option>../../static/img/img4.png</option>
+        <option>../../static/img/img5.png</option>
+
+      </select>
+
+      <button type="submit" class="btn btn-danger">Guardar</button>
+      <a href="/ver_perfiles/{{ usuario.id }}" class="btn btn-danger"> Volver </a>
+    </form>
+  </div>
+
+
+</div>
+
+
+{% endblock %}

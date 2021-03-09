@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="container p-2">
+    {% if not libros %}
+        <h1 class="text-center p-5"> ¡No hay libros aquí! </h1><hr>
+        <h2 class="p-5"> Puede ser que no haya libros cargados o la busqueda reliazdo haya fallado, vuelve a intentarlo más tarde :)</h2>
+        <br><br><br><br>
+    {% else %}
+        {% for libro in libros %}
+        <div class="card mx-auto m-5" style="width: 40rem;">
+            <div class="card-header">
+                <h1 class="card-title text-center">{{libro.nombre}}</h1>
+            </div>
+
+            <div class="card-body">
+                <p> <b>ISBN:</b> {{libro.isbn}} </p>
+                {% for editorial in editoriales %}
+                {% if libro.editorial == editorial.id %}
+                <p> <b>Editorial:</b> {{editorial.nombre}} </p>
+                {% endif%}
+                {% endfor%}
+
+                {% for autor in autores %}
+                {% if libro.autor == autor.id %}
+                <p> <b>Autor:</b>
+				{% if session.admin %}<a href="{{ url_for('autor', autor_id=autor.id) }}"> {{autor.nombre}} </a>
+				{% else %} {{autor.nombre}}
+				{% endif %}
+				</p>
+                {% endif %}
+                {% endfor%}
+
+                {% for genero in generos %}
+                {% if libro.genero == genero.id %}
+                <p> <b>Genero:</b> {{genero.nombre}} </p>
+                {% endif %}
+                {% endfor%}
+
+                {% if session.admin %}
+                {% if libro.activo %}
+                <p><b>Estado:</b> Habilitado</p>
+                {% else %}
+                <p><b>Estado:</b> Deshabilitado</p>
+                {% endif %}
+                {% endif %}
+                <hr>
+
+                <div class="text-center">
+                    <h2> Portada </h2>
+                    <a href="{{libro.ruta_img}}">
+                        <img src="{{libro.ruta_img}}" alt="Smiley face" width="250px" height="300px">
+                    </a>
+                </div>
+                <hr>
+
+                <p> <b>Sinopsis:</b> {{libro.sinopsis}}</b></p>
+                <hr>
+                <div class="text-center">
+                    {% if libro.activo %}
+                    <a
+                        class="btn btn-primary"
+                        title="Ver"
+                        href="{{ url_for('libro', libro_id=libro.id) }}"
+                    >
+                        <span class="material-icons" style="vertical-align:middle;">visibility</span>
+                        Detalles
+                    </a>
+                    {% else %}
+                    <a
+                        class="btn btn-primary disabled"
+                        title="Ver"
+                        href="{{ url_for('libro', libro_id=libro.id) }}"
+                    >
+                        <span class="material-icons" style="vertical-align:middle;">visibility</span>
+                        Ya no está disponible
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="text-center pb-2">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Volver</a>
+    </div>
+</div>
+
+{% endblock %}

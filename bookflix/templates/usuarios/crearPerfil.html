@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<div class="conteiner">
+  <h1 class="titulo text-center pt-5 mt-5"> Crear Perfil </h1>
+
+</div>
+<form action="/crear_perfil/{{ usuario.id }}" method="POST" class="titulo text-center pt-5 mt-5">
+  {% if errores %}
+  <div class="alert alert-danger" role="alert">
+    <ul>
+      {% for error in errores %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  <input type="text" name="nombre" placeholder="Nombre de Perfil">
+  <select name="foto">
+    <option>../../static/img/img1.png</option>
+    <option>../../static/img/img2.png</option>
+    <option>../../static/img/img3.png</option>
+    <option>../../static/img/img4.png</option>
+    <option>../../static/img/img5.png</option>
+
+  </select>
+
+  <button type="submit" class="btn btn-danger"> Guardar</button>
+  <a href="/ver_perfiles/{{ usuario.id }}" class="btn btn-danger"> Volver </a>
+</form>
+
+
+{% endblock %}

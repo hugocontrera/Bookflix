@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Editar una reseña</h1>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="card mx-auto m-5" style="width: 40rem;">
+		<div class="card-header">
+			<h1 class="card-title">Editar una reseña escrita por ti</h1>
+		</div>
+		
+		<div class="card-body">
+			<span class="card-text">
+				<form method="POST">
+					<section class="form-group">
+						<label for="calificacion"> Calificacion </label>
+						<select class="custom-select" name="calificacion" id="calificacion">
+							{% for i in range(1,6) %}
+								{% if reseña['calificacion'] == i %}
+									<option selected value="{{i}}">{{i}}</option>
+								{% else %}
+									<option value="{{i}}">{{i}}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+					</section>
+
+					<section class="form-group">
+						<label for="comentario"> Comentario </label>
+						<textarea type="text" class="form-control form-control-lg rounded-0" name="comentario"
+							id="comentario" required value="{{reseña['comentario']}}">{{reseña.comentario}}</textarea>
+					</section>
+					
+					<section class="form-group">
+						<div class="form-check">
+							{% if reseña.spoiler %}
+							<input class="form-check-input" type="checkbox" value="1" id="spoiler" name="spoiler" checked>
+							{% else %}								
+							<input class="form-check-input" type="checkbox" value="1" id="spoiler" name="spoiler">
+							{% endif %}
+							<label class="form-check-label" for="spoiler">
+							Marcar comentario como <b>spoiler</b>
+							</label>
+						</div>
+					</section>
+
+					<input type="text" hidden value="{{reseña['libro_id']}}" id="libro_id" name="libro_id">
+					<input type="text" hidden value="{{reseña['id']}}" id="reseña_id" name="reseña_id">
+
+					<div class="text-right">
+						<a href="/ver_catalogo" class="btn btn-white">Cancelar</a>
+						<button href="{{ url_for('reseña_editar', libro_id=reseña.libro_id) }}" type="submit" class="btn btn-primary">Aceptar</button>
+					</div>
+				</form>
+			</span>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

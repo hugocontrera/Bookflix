@@ -1,0 +1,306 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<!-- Información del libro -->
+		<div class="card mx-auto m-5" style="width: 60rem;">
+			<div class="card-header">
+				<h1 class="card-title text-center">{{ libro.nombre | capitalize }}</h1>
+			</div>
+			
+			<div class="d-flex">
+				<div class="col-6" style="border-right: solid black; border-width: 1px; border-color: gray;">
+					<div class="text-center">
+						<h2> Portada </h2>
+						<a href="{{libro.ruta_img}}">
+							<img src="{{libro.ruta_img}}" alt="Smiley face" width="250px" height="300px">
+						</a>
+					</div>
+				</div>
+
+				<div class="col-6">
+					<h2 class="pb-2 text-center"> Información del libro </h2>
+
+					<p> <b>ISBN:</b> {{libro.isbn}} </p>
+					<p> <b>Editorial:</b> {{editorial.nombre}} </p>
+					<p> <b>Autor:</b>
+					{% if session.admin %}<a href="{{ url_for('autor', autor_id=autor.id) }}"> {{autor.nombre}} </a>
+					{% else %} {{autor.nombre}}
+					{% endif %}
+					</p>
+					<p> <b>Genero:</b> {{genero.nombre}} </p>
+					
+					{% if session.admin %}
+						{% if libro.activo %}
+						<p><b>Estado:</b> Habilitado</p>
+						{% else %}
+						<p><b>Estado:</b> Deshabilitado</p>
+						{% endif %}
+					{% endif %}
+
+					{% if promedio > 0 %}
+					<p><b>Promedio:</b> {{promedio}}</p>
+					{% else %}
+					<p><b>Promedio:</b> El libro todavía no tiene calificaciones.</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+
+		<!-- Información de los capitulos -->
+		<div class="card mx-auto" style="width: 60rem;">
+			<div class="card-header d-flex justify-content-between">
+				<div>
+					{% if capitulos|length > 0 %}
+						{% if libro.completo == 1 %}
+							<h1 class="card-title">Leer Libro Entero</h1>
+						{% else %}
+							<h1 class="card-title">Leer por capítulos</h1>
+						{% endif %}
+					{% endif %}
+				</div>
+
+				<div>
+					{% if session['admin'] %}
+					{% if libro.completo == 0 %}
+					<a class="btn btn-success btn-lg text-right" href="{{ url_for('capitulo_upload', libro_id=libro.id) }}">
+						Agregar un capítulo
+						<i class="material-icons" style="vertical-align:middle">add_to_queue</i>
+					</a>
+					{% endif %}
+					{% if capitulos|length == 0 %}
+					<a class="btn btn-success btn-lg text-right" href="{{ url_for('capitulo_completo', libro_id=libro.id) }}">
+						Agregar libro completo
+						<i class="material-icons" style="vertical-align:middle">add_to_queue</i>
+					</a>
+					{% endif %}
+					{% else %}
+					{% if leido %}
+					<a class="btn btn-danger btn-lg text-right disabled" href="#">
+						Libro ya leído
+						<i class="material-icons" style="vertical-align:middle">loop</i>
+					</a>
+					{% elif leyendo %}
+					<a class="btn btn-success btn-lg text-right" href="{{ url_for('libro_leido', libro_id=libro.id) }}">
+						Marcar como leído
+						<i class="material-icons" style="vertical-align:middle">add_to_queue</i>
+					</a>
+					{% endif %}
+					{% if favorito %}
+					<a class="btn btn-danger btn-lg text-right" href="{{ url_for('eliminar_favorito', libro_id=libro.id) }}">
+						Eliminar de favoritos
+						<i class="material-icons" style="vertical-align:middle">star</i>
+					</a>
+					{% else %}
+					<a class="btn btn-success btn-lg text-right" href="{{ url_for('agregar_favorito', libro_id=libro.id) }}">
+						Agregar a favoritos
+						<i class="material-icons" style="vertical-align:middle">star</i>
+					</a>
+					{% endif %}
+					{% endif %}
+				</div>
+			</div>
+			
+			<!-- Información que muestro en el caso de un libro entero (osea solo tiene 1 capítulo) -->
+			{% if libro.completo == 1 %}
+			<h2 class="text-center p-5">
+				El libro actualmente esta subido entero en un solo arhivo
+				<hr>
+				<a class="btn btn-primary" href="{{ url_for('capitulo', capitulo_id=capitulos[0].id) }}" style="font-size: 25px;"> Leer </a>
+			</h2>
+
+			<!-- Información que muestro en el caso de un libro por capítulos (osea tiene 2 o más capítulos) -->
+			{% else %}
+			{% if capitulos|length > 0 %}
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th scope="col">Número de capítulo</th>
+							<th scope="col">Fecha de publicación</th>
+							<th scope="col">Acciones</th>
+						</tr>
+					</thead>
+			
+					<tbody>
+						{% for capitulo in capitulos %}
+						<tr>
+							<!-- https://stackoverflow.com/questions/35343881/jinja-loop-index-does-not-print -->
+							<th scope="row">{{ loop.index }}</th>
+							<td>{{ capitulo.fecha_publicacion }}</td>
+							<td>
+								<a
+									class="btn btn-primary"
+									title="Ver"
+									href="{{ url_for('capitulo', capitulo_id=capitulo.id) }}"
+								>
+								<!-- https://stackoverflow.com/questions/22545325/how-to-vertically-align-text-with-icon-font -->
+								<span class="material-icons" style="vertical-align:middle;">visibility</span>
+								Leer
+								</a>
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{% endif %}
+			{% endif %}
+		</div>
+
+	</div>
+	<br><br><br><br>
+	<div class="">
+		{% if session["perfil_id"] %}
+			{% if not perfil_tiene_reseña and perfil_leyo_el_libro%}
+			<a href="{{ url_for('reseña_new', libro_id=libro.id) }}" class="btn btn-primary float-right">Añadir una reseña</a>
+			{% endif %}
+		{% endif %}
+		<h1 class="text-center">Reseñas</h1>
+	</div>
+	<hr>
+	{% if reseñas %}
+		{% for reseña in reseñas %}
+		{% if session["perfil_id"] == reseña.perfil_id %}
+			<div style="background-color: #ffff66;" class="p-1">
+				<div class="float-left">
+					<img src="{{reseña.perfil_foto}}" alt="Foto de perfil" width="20px" height="20px" class="mr-2">
+					<b>{{reseña.perfil_nombre}}</b> <small class="text-secondary">(reseña escrita por ti)</small>
+				</div>
+
+				<div class="float-right">
+					<!-- [ {{reseña.calificacion}} / 5 ] -->
+					{% for i in range(reseña.calificacion) %}
+						<span class="material-icons pr-1">star</span>
+					{% endfor %}
+					{% for i in range((5 - reseña.calificacion)) %}
+						<span class="material-icons pr-1">star_border</span>
+					{% endfor %}
+				</div>
+				<br>
+
+				<div class="container m-2">
+					{{reseña.comentario}}
+				</div>
+
+				<div class="float-right">
+					<a class="btn m-0 p-0 text-primary" href="{{ url_for('reseña_editar', reseña_id=reseña.id) }}">Editar</a> |
+					<a class="btn m-0 p-0 text-primary" data-toggle="modal" data-target="#exampleModal">Borrar</a>
+				</div>
+				<br>
+			</div>
+			<hr>
+
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Borrar Reseña</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+
+						<div class="modal-body">
+							¿Estas seguro de que quieres borrar tu reseña?, una vez que lo hagas se borrara para siempre.
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+							<a class="btn btn-danger" href="{{ url_for('reseña_eliminar', libro_id=reseña.libro_id, reseña_id=reseña.id, perfil_id=reseña.perfil_id) }}">Borrar</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		{% endfor %}
+
+		{% for reseña in reseñas %}
+			{% if session["perfil_id"] != reseña.perfil_id %}
+				<div>
+					<div class="float-left">
+						<img src="{{reseña.perfil_foto}}" alt="Foto de perfil" width="20px" height="20px" class="mr-2">
+						<b>{{reseña.perfil_nombre}}</b>
+					</div>
+
+					<div class="float-right">
+						<!-- [ {{reseña.calificacion}} / 5 ] -->
+						{% for i in range(reseña.calificacion) %}
+							<span class="material-icons pr-1">star</span>
+						{% endfor %}
+						{% for i in range((5 - reseña.calificacion)) %}
+							<span class="material-icons pr-1">star_border</span>
+						{% endfor %}
+					</div>
+					<br>
+
+					<div class="container m-2">
+						<!-- Pregunto si la reseña es spoiler -->
+						{% if not reseña.spoiler %}
+							{{reseña.comentario}}
+						{% else %}
+							<script>
+								$(function () {
+									$('[data-toggle="popover"]').popover()
+								})
+							</script>
+
+							<button type="button" class="btn btn-danger" data-toggle="popover" title="Reseña" data-content="{{reseña.comentario}}">Spoiler</button>
+						{% endif %}
+
+						{% if session.admin %}
+						<div class="float-right">
+							<a class="btn m-0 p-0 text-primary" data-toggle="modal" data-target="#exampleModal_{{reseña.id}}">Borrar</a>
+						</div>
+						{% endif %}
+					</div>
+					<hr>
+				</div>
+
+				{% if session.admin %}
+				<!-- https://stackoverflow.com/questions/40937631/modals-created-in-jinja-conditional-statement-are-all-showing-the-same-data -->
+				<!-- Modal -->
+				<div class="modal fade" id="exampleModal_{{reseña.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Borrar Reseña</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+
+							<div class="modal-body">
+								¿Estas seguro de que quieres borrar tu reseña?, una vez que lo hagas se borrara para siempre.
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>							
+								<a class="btn btn-danger" href="{{ url_for('reseña_eliminar', libro_id=reseña.libro_id, reseña_id=reseña.id, perfil_id=reseña.perfil_id) }}">Borrar</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+	{% else %}
+	Este libro no tiene reseñas, por lo tanto no hay reseñas para ver.
+	{% endif %}
+</div>
+
+<div class="text-center p-5">
+	{% if session.admin %}
+		<a href="{{ url_for('libro_index') }}" class="btn btn-primary">Volver</a>
+	{% else %}
+		<a href="/ver_catalogo" class="btn btn-primary">Volver</a>
+	{% endif %}
+</div>
+
+{% endblock %}

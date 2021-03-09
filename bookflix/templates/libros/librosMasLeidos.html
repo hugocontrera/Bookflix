@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Libros más leídos</h1>
+		<p class="lead">
+			Desde aqui podras visualizar cuales son los libros más leídos de la página.
+		</p>
+
+		<hr class="my-4">
+	</div>
+</div>
+
+<div class="container p-5">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Titulo</th>
+				<th scope="col">Acciones</th>
+				<th scope="col">Lecturas</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			{% for libro in libros %}
+			<tr>
+				<th scope="row">{{ libro.id }}</th>
+				<td><a href="{{ url_for('libro', libro_id=libro.id) }}">{{ libro.nombre }}</a></td>
+				<td>
+					<a
+						class="material-icons btn btn-primary"
+						title="Ver"
+						href="{{ url_for('libro', libro_id=libro.id) }}"
+					>visibility</a>
+				</td>
+				<td>{{ libro.lecturas }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

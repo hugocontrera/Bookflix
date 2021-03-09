@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="card mx-auto m-5" style="width: 60rem;">
+			<div class="card-header">
+				<h1 class="card-title text-center">{{ autor.nombre | capitalize }}</h1>
+				{% if autor.activo == 0 %}
+				<h4 class="card-title text-center">Deshabilitado</h4>
+				{% endif %}
+			</div>
+		</div>
+
+		<!-- Informacion de los libros -->
+		<div class="card mx-auto" style="width: 60rem;">
+			<div class="card-header d-flex justify-content-between">
+				<div>
+					<h1 class="card-title">Libros del autor</h1>
+				</div>
+			</div>
+			
+			{% if libros|length == 0 %}
+			<h2 class="text-center p-5">
+				No existen libros de este autor
+			</h2>
+
+			{% else %}
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Nombre</th>
+						<th scope="col">Genero</th>
+						<th scope="col">Autor</th>
+						<th scope="col">Activo</th>
+						<th scope="col">Acciones</th>
+					</tr>
+				</thead>
+		
+				<tbody>
+					{% for libro in libros %}
+					<tr>
+						<th scope="row">{{ libro.libro.id }}</th>
+						<td><a href="{{ url_for('libro', libro_id=libro.libro.id) }}">{{ libro.libro.nombre }}</a></td>
+						<td>{{libro.genero.nombre}}</td>
+						<td><a href="{{ url_for('autor', autor_id=libro.autor.id) }}">{{ libro.autor.nombre }}</a></td>
+						<td>
+							{% if libro.libro.activo == 1 %}
+								Habilitado
+							{% else %}
+								Deshabilitado
+							{% endif %}
+						</td>
+						<td>
+							<a
+								class="material-icons btn btn-primary"
+								title="Ver"
+								href="{{ url_for('libro', libro_id=libro.libro.id) }}"
+							>visibility</a>
+		
+							<a
+								class="material-icons btn btn-info"
+								title="Editar"
+								href="{{ url_for('libro_edit', libro_id=libro.libro.id) }}"
+							>edit</a>
+		
+							{% if libro.libro.activo == 1 %}
+							<a
+								class="material-icons btn btn-danger"
+								title="Eliminar"
+								href="{{ url_for('libro_deshabilitar', libro_id=libro.libro.id) }}"
+							>delete</a>
+							{% else %}
+							<a
+								class="material-icons btn btn-success"
+								title="Eliminar"
+								href="{{ url_for('libro_habilitar', libro_id=libro.libro.id) }}"
+							>delete_forever</a>
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% endif %}
+		</div>
+
+	</div>
+</div>
+
+<div class="text-center p-5">
+	<a href="{{ url_for('autor_index') }}" class="btn btn-primary">Volver</a>
+</div>
+
+{% endblock %}

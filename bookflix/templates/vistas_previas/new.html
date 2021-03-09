@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Crear una nueva vista previa</h1>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="card mx-auto m-5" style="width: 40rem;">
+		<div class="card-header">
+			<h1 class="card-title">Agregar una vista previa</h1>
+		</div>
+
+		<div class="card-body">
+			<span class="card-text">
+				<form method="POST" enctype="multipart/form-data">
+					{% if errores %}
+					<div class="alert alert-danger" role="alert">
+						<ul>
+							{% for error in errores %}
+							<li>{{ error }}</li>
+							{% endfor %}
+						</ul>
+					</div>
+					{% endif %}
+
+					<section class="form-group">
+						<label for="nombre"> Nombre (Obligatorio) </label>
+						{% if not vista %}
+						<input type="text" class="form-control form-control-lg rounded-0" name="nombre" id="nombre"
+							required>
+						{% else %}
+						<input type="text" class="form-control form-control-lg rounded-0" name="nombre" id="nombre"
+							required value="{{vista.nombre}}">
+						{% endif %}
+					</section>
+
+					<section class="form-group">
+						<label for="descripcion"> Descripcion (Opcional) </label>
+						{% if not vista %}
+						<input type="text" class="form-control form-control-lg rounded-0" name="descripcion"
+							id="descripcion">
+						{% else %}
+						<input type="text" class="form-control form-control-lg rounded-0" name="descripcion"
+							id="descripcion" value="{{vista.descripcion}}">
+						{% endif %}
+					</section>
+
+					<section class="form-group">
+						<label for="pdf"> Pdf (Si no hay Video es Obligatorio) </label>
+						<input type="file" class="form-control form-control-lg rounded-0" name="pdf" id="pdf">
+					</section>
+
+					<section class="form-group">
+						<label for="video"> Video (Si no hay Pdf es Obligatorio) </label>
+						<input type="text" class="form-control form-control-lg rounded-0" name="video"
+							id="video">
+					</section>
+
+					<section class="form-group">
+						<label for="fecha_de_publicacion"> Fecha de Publicación </label>
+						<input type="date" class="form-control form-control-lg rounded-0" name="fecha_de_publicacion"
+							id="fecha_de_publicacion" required value="{{fecha_de_hoy}}">
+					</section>
+
+					<section class="form-group">
+						<label for="imagen"> Imagen (opcional) </label>
+						<input type="file" class="form-control form-control-lg rounded-0" name="imagen" id="imagen">
+					</section>
+
+					<div class="text-right">
+						<a href="{{ url_for('vista_previa_index') }}" class="btn btn-white">Cancelar</a>
+						<button type="submit" class="btn btn-primary">Aceptar</button>
+					</div>
+				</form>
+			</span>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

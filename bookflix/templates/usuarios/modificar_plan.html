@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+
+	<div class="container p-5">
+		<div class="card mx-auto m-5" style="width: 40rem;">
+			<div class="card-header">
+				<h1 class="card-title">Modificar Plan Actual</h1>
+			</div>
+			
+			<div class="card-body">
+				<span class="card-text">
+					<form method="POST">
+						{% if errores %}
+						<div class="alert alert-danger" role="alert">
+							<ul>
+								{% for error in errores %}
+								<li>{{ error }}</li>
+								{% endfor %}
+							</ul>
+						</div>
+						{% endif %}
+
+						{% for plan in planes %}
+						
+						<div class="row">
+							<div class="col-4">
+								<div class="form-check">
+									{% if id_plan_del_usuario == plan.id %}
+									<input
+										class="form-check-input mt-3"
+										type="radio"
+										name="plan_id"
+										id="{{ plan.id }}"
+										value="{{ plan.id }}"
+										style="transform: scale(2);" checked>
+									{% else %}
+									<input
+										class="form-check-input mt-3"
+										type="radio"
+										name="plan_id"
+										id="{{ plan.id }}"
+										value="{{ plan.id }}"
+										style="transform: scale(2);">
+									{% endif %}
+
+									<label class="form-check-label" for="{{ plan.id }}">
+										<h2 class="pl-2">{{ plan.nombre | capitalize }}</h2>
+
+										{% if id_plan_del_usuario == plan.id %}
+										<small class="form-text text-muted">
+											(Plan actual)
+										</small>
+										{% endif %}
+									</label>
+								</div>
+							</div>
+							
+							<div class="col-8">
+								<p><b>Tipo de plan: </b>{{ plan.nombre }}</p>
+								<p><b>Cantidad de perfiles permitidos: </b>{{ plan.perfiles_max }}</p>
+								<p><b>Precio del plan: </b>$ {{ plan.precio }}</p>
+							</div>
+						</div>
+						<hr style="border: 1px solid;">
+
+						{% endfor %}
+						
+						<div class="text-right">
+							<a href="{{ url_for('usuario_detalles') }}" class="btn btn-white">Cancelar</a>
+							<button type="submit" class="btn btn-primary">Aceptar</button>
+						</div>
+					</form>
+				</span>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

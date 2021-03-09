@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<br><br><br>
+<h1 class="text-center">En {{mes}} del año {{año}}, hubo {{usuarios_cantidad}} suscripcion/es</h1>
+<br><br><br>
+{% if usuarios_cantidad > 0 %}	
+	<div class="container">
+		<h2 class="text-center">Usuarios que realizaron una suscripcion (en {{mes}}/{{año}})</h2>
+		<hr>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Nombre</th>
+					<th scope="col">Apellido</th>
+					<th scope="col">E-mail</th>
+					<th scope="col">Fecha de sucripción</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{% for usuario in usuarios %}
+				<tr>
+					<th scope="row">{{ usuario.id }}</th>
+					<td>{{ usuario.nombre }}</td>
+					<td>{{ usuario.apellido }}</td>
+					<td>{{ usuario.email }}</td>
+					<td>{{ usuario.fecha_de_creacion }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% else %}
+	<h4 class="text-center text-secondary">(No hay usuarios para mostrar)</h4>
+	<br><br><br>
+{% endif %}
+
+<br>
+<div class="text-center pb-2">
+	<a href="{{ url_for('suscripcionForm') }}" class="btn btn-primary">Volver</a>
+</div>
+<br>
+
+{% if usuarios_cantidad == 0 %}
+<br><br><br
+{% endif %}
+
+{% endblock %}

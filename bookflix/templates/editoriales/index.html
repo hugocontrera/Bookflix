@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Administración de editoriales</h1>
+		<p class="lead">
+			Desde aquí podrás administrar a las Editoriales en el sistema. Por lo tanto
+			las acciones de Ver, Editar, Crear y Eliminar editoriales se harán desde acá.
+		</p>
+
+		<hr class="my-4">
+
+		<div class="text-right">
+			<p>¡Desde aquí puedes ir a un formulario para añadir nuevas Editoriales!</p>
+			<a class="btn btn-success btn-lg" href="{{ url_for('editorial_new') }}" role="button">
+				Añadir una editorial
+				<i class="material-icons" style="vertical-align:middle">add_to_queue</i>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div class="container p-5">
+
+		{% if editoriales %}
+		<table class="table table-striped">
+			{% if errores %}
+			<div class="alert alert-danger" role="alert">
+				<ul>
+					{% for error in errores %}
+					<li>{{ error }}</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Nombre</th>
+					<th scope="col">Activo</th>
+					<th scope="col" colspan="3">Acciones</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{% for editorial in editoriales %}
+				<tr>
+					<th scope="row">{{ editorial.id }}</th>
+					<td>{{ editorial.nombre.capitalize() }}</td>
+					<td>
+						{% if editorial.activo %}
+							Si
+						{% else %}
+							No
+						{% endif %}
+					</td>
+					<td>
+						<a
+							class="material-icons btn btn-primary disabled"
+							title="Ver"
+						>visibility</a>
+					</td>
+					<td>
+						<a
+							class="material-icons btn btn-info"
+							title="Editar"
+							href="{{ url_for('editorial_edit', editorial_id=editorial.id) }}"
+						>edit</a>
+					</td>
+					<td>
+						{% if editorial.activo %}
+						<a 
+							class="material-icons btn btn-danger" 
+							title="Eliminar"
+							href="{{ url_for('editorial_delete', editorial_id=editorial.id) }}"
+						>delete</a>
+							
+						{% else %}
+						<a 
+							class="material-icons btn btn-danger"
+							title="Restaurar"
+							href="{{ url_for('editorial_delete', editorial_id=editorial.id) }}"					
+						>delete</a>
+						{% endif %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		
+		{% else %}
+			No hay editoriales cargadas en el sistema, ¡intenta agregar una!.
+		{% endif %}
+</div>
+
+{% endblock %}

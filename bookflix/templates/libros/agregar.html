@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+
+	<div class="container p-5">
+		<div class="card mx-auto m-5" style="width: 40rem;">
+			<div class="card-header">
+				<h1 class="card-title">Subir Libro</h1>
+			</div>
+			
+			<div class="card-body">
+				<span class="card-text">
+					<form method="POST" enctype="multipart/form-data">
+						{% if errores %}
+						<div class="alert alert-danger" role="alert">
+							<ul>
+								{% for error in errores %}
+								<li>{{ error }}</li>
+								{% endfor %}
+							</ul>
+						</div>
+						{% endif %}
+
+						<section class="form-group">
+							<label for="nombre"> Nombre </label>
+							<input type="text" class="form-control form-control-lg rounded-0" name="nombre"
+								id="nombre" required {% if old %}value="{{old.nombre}}"{% endif %}>
+						</section>
+
+						<section class="form-group">
+							<label for="editorial"> Editorial </label>
+							<select class="selectpicker" data-live-search="true" name="editorial" id="editorial" required>
+								{% if old %}
+								{% for editorial in editoriales %}
+									<option value="{{editorial.id}}" {% if editorial.id|int() == old.editorial|int() %} selected {% endif %}>{{ editorial.nombre }}</option>
+								{% endfor %}
+								{% else %}
+								{% for editorial in editoriales %}
+									<option value="{{editorial.id}}">{{ editorial.nombre }}</option>
+								{% endfor %}
+								{% endif %}
+							</select>
+						</section>
+
+						<section class="form-group">
+							<label for="genero"> Genero </label>
+							<select class="selectpicker" data-live-search="true" name="genero" id="genero" required>
+								{% if old %}
+								{% for genero in generos %}
+									<option value="{{genero.id}}" {% if genero.id|int() == old.genero|int() %} selected {% endif %}>{{ genero.nombre }}</option>
+								{% endfor %}
+								{% else %}
+								{% for genero in generos %}
+									<option value="{{genero.id}}">{{ genero.nombre }}</option>
+								{% endfor %}
+								{% endif %}
+							</select>
+						</section>
+
+						<section class="form-group">
+							<label for="autor"> Autor </label>
+							<select class="selectpicker" data-live-search="true" name="autor" id="autor" required>
+								{% if old %}
+								{% for autor in autores %}
+									<option value="{{autor.id}}" {% if autor.id|int() == old.autor|int() %} selected {% endif %}>{{ autor.nombre }}</option>
+								{% endfor %}
+								{% else %}
+								{% for autor in autores %}
+									<option value="{{autor.id}}">{{ autor.nombre }}</option>
+								{% endfor %}
+								{% endif %}
+							</select>
+						</section>
+
+						<section class="form-group">
+							<label for="isbn"> ISBN </label>
+							<input type="text" class="form-control form-control-lg rounded-0" name="isbn"
+								id="isbn" required {% if old %}value="{{old.isbn}}"{% endif %}>
+						</section>
+
+						<section class="form-group">
+							<label for="fechaPublicacion"> Fecha de publicacion </label>
+							<input type="date" class="form-control form-control-lg rounded-0" name="fechaPublicacion"
+								id="fechaPublicacion" required {% if old %}value="{{old.fechaPublicacion}}"{% endif %}>
+						</section>
+
+						<section class="form-group">
+							<label for="fechaVencimiento"> Fecha de vencimiento </label>
+							<input type="date" class="form-control form-control-lg rounded-0" name="fechaVencimiento"
+								id="fechaVencimiento" {% if old %}value="{{old.fechaVencimiento}}"{% endif %}>
+						</section>
+
+						<section class="form-group">
+							<label for="portada"> Portada </label>
+							<input type="file" class="form-control form-control-lg rounded-0" name="portada"
+								id="portada" required {% if old %}value="{{old.portada}}"{% endif %}>
+						</section>
+
+						<section class="form-group">
+							<label for="sinopsis"> Sinopsis </label>
+							<textarea type="text" class="form-control form-control-lg rounded-0" name="sinopsis"
+								id="sinopsis" required {% if old %}value="{{old.sinopsis}}"{% endif %}>{{old.sinopsis}}</textarea>
+						</section>
+
+                        <div class="text-right">
+							<a href="{{ url_for('libro_index') }}" class="btn btn-white">Cancelar</a>
+							<button type="submit" class="btn btn-primary">Aceptar</button>
+						</div>
+
+					</form>
+				</span>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

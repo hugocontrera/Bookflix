@@ -1,0 +1,66 @@
+<!-- https://getbootstrap.com/docs/4.4/components/navbar/ -->
+<header class="sticky-top">
+	<!-- Image and text -->
+	<nav class="navbar" style="background-color: #000000">
+		<a class="navbar-brand" href="{{ url_for('index') }}">
+			<img src="{{ url_for('static', filename='img/logo25.png') }}"
+				class="d-inline-block align-top"
+				alt="Logo de Bookflix">
+		</a>
+
+		{% if session['id'] %}
+			<h2 class="text-white">Bienvenido de vuelta</h2>
+		{% endif %}
+
+		<div class="text-right">
+			{% if session['id'] %}
+				<a href="{{ url_for('libro_search') }}" class="btn btn-danger">Buscar</a>
+				{% if session['admin'] %}
+					<a href="{{ url_for('panel_de_control') }}" class="btn btn-danger">Panel de control</a>
+					<a href="{{ url_for('logout') }}" class="btn btn-outline-light">Cerrar Sesión</a>
+				{% else %}
+					<!-- https://getbootstrap.com/docs/4.0/components/dropdowns/?https://getbootstrap.com/docs/4.0/components/dropdowns/? -->
+					<!-- <span class="material-icons">account_circle</span> -->
+					<div class="btn-group">
+						<button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="material-icons">person</span>
+						</button>
+
+						<div class="dropdown-menu dropdown-menu-right text-center">
+							<a href="{{ url_for('ver_perfiles_con_sesion') }}" class="pl-3 pb-1" style="color: black; display: flex; align-items: center;">
+								<span class="material-icons pr-1">search</span>
+								Mis perfiles
+							</a>
+							<a href="{{ url_for('usuario_detalles') }}" class="pl-3" style="color: black; display: flex; align-items: center;">
+								<span class="material-icons pr-1">settings</span>
+								Configuración
+							</a>
+							{% if session['perfil_id'] %}
+								<hr>
+								<a href="{{ url_for('leyendo') }}" class="pl-3" style="color: black; display: flex; align-items: center;">
+									<span class="material-icons pr-1">visibility</span>
+									Leyendo
+								</a>
+								<a href="{{ url_for('leidos') }}" class="pl-3" style="color: black; display: flex; align-items: center;">
+									<span class="material-icons pr-1">playlist_add_check</span>
+									Leidos
+								</a>
+								<a href="{{ url_for('favorito') }}" class="pl-3" style="color: black; display: flex; align-items: center;">
+									<span class="material-icons pr-1">stars</span>
+									Favoritos
+								</a>
+							{% endif %}
+							<hr>
+							<a href="{{ url_for('logout') }}" class="pl-3" style="color: black; display: flex; align-items: center;">
+								<span class="material-icons pr-1">close</span>
+								Cerrar Sesión
+							</a>
+						</div>
+					</div>
+				{% endif %}
+			{% else %}
+				<a href="{{ url_for('login') }}" class="btn btn-danger">Iniciar Sesión</a>
+			{% endif %}
+		</div>
+	</nav>
+</header>

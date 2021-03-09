@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Administración de generos</h1>
+		<p class="lead">
+			Desde aquí podrás administrar los Generos en el sistema. Por lo tanto
+			las acciones de Ver, Editar, Crear y Eliminar generos se harán desde acá.
+		</p>
+
+		<hr class="my-4">
+
+		<div class="text-right">
+			<p>¡Desde aquí puedes ir a un formulario para añadir nuevos Generos!</p>
+			<a class="btn btn-success btn-lg" href="{{ url_for('genero_new') }}" role="button">
+				Añadir un genero
+				<i class="material-icons" style="vertical-align:middle">add_to_queue</i>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div class="container p-5">
+	<table class="table table-striped">
+		{% if errores %}
+		<div class="alert alert-danger" role="alert">
+			<ul>
+				{% for error in errores %}
+				<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Nombre</th>
+				<th scope="col">Activo</th>
+				<th scope="col" colspan="3">Acciones</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			{% for genero in generos %}
+			<tr>
+				<th scope="row">{{ genero.id }}</th>
+				<td>{{ genero.nombre.capitalize() }}</td>
+				<td>
+					{% if genero.activo %}
+						Si
+					{% else %}
+						No
+					{% endif %}
+				</td>
+				<td>
+					<a
+						class="material-icons btn btn-primary disabled"
+						title="Ver"
+					>visibility</a>
+				</td>
+				<td>
+					<a
+						class="material-icons btn btn-info"
+						title="Editar"
+						href="{{ url_for('genero_edit', genero_id=genero.id) }}"
+					>edit</a>
+				</td>
+				<td>
+					{% if genero.activo %}
+					<a 
+						class="material-icons btn btn-danger" 
+						title="Eliminar"
+						href="{{ url_for('genero_delete', genero_id=genero.id) }}"					
+					>delete</a>
+					{% else %}
+					<a 
+						class="material-icons btn btn-danger" 
+						title="Restaurar"
+						href="{{ url_for('genero_delete', genero_id=genero.id) }}"
+					>delete</a>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}

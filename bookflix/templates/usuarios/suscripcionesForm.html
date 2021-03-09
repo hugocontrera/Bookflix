@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Suscripciones</h1>
+	</div>
+</div>
+
+
+<div class="container">
+	<div class="card mx-auto m-5" style="width: 40rem;">
+		<div class="card-header">
+			<h3 class="card-title">Buscar suscripciones por mes y año</h3>
+		</div>
+		
+		<div class="card-body">
+			<span class="card-text">
+				<form method="POST">
+					<section class="form-group">
+						<label for="año"> Año  </label>
+						<input type="number" class="form-control form-control-lg rounded-0" name="año"
+							id="año" required min="2000" max="2020" value="2020"></input>
+					</section>
+
+					<section class="form-group">
+						<label for="mes"> Mes </label>
+						<select class="custom-select" name="mes" id="mes">
+							<option selected value="1">Enero</option>
+							<option value="2">Febrero</option>
+							<option value="3">Marzo</option>
+							<option value="4">Abril</option>
+							<option value="5">Mayo</option>
+							<option value="6">Junio</option>
+							<option value="7">Julio</option>
+							<option value="8">Agosto</option>
+							<option value="9">Septiembre</option>
+							<option value="10">Octubre</option>
+							<option value="11">Noviembre</option>
+							<option value="12">Diciembre</option>
+						</select>
+					</section>
+
+					<div class="text-right">
+						<button href="{{ url_for('suscripcionShow') }}" type="submit" class="btn btn-primary">Buscar</button>
+					</div>
+				</form>
+			</span>
+		</div>
+	</div>
+</div>
+
+<div class="text-center pb-2">
+	<a href="{{ url_for('panel_de_control') }}" class="btn btn-primary">Volver</a>
+</div>
+<br>
+{% endblock %}

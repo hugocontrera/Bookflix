@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+{% block title %}Bookflix{% endblock %}
+
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-4 text-center">Administración de libros</h1>
+		<p class="lead">
+			Desde aquí podrás administrar los Libros en el sistema. Por lo tanto
+			las acciones de Ver, Editar, Crear y Eliminar libros se harán desde acá.
+		</p>
+
+		<hr class="my-4">
+
+		<div class="text-right">
+			<p>¡Desde aquí puedes ir a un formulario para añadir nuevos Libros!</p>
+			<a class="btn btn-success btn-lg" href="{{ url_for('libro_upload') }}" role="button">
+				Agregar un libro
+				<i class="material-icons" style="vertical-align:middle">add_to_queue</i>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div class="container p-5">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Nombre</th>
+				<th scope="col">Genero</th>
+				<th scope="col">Autor</th>
+				<th scope="col">Activo</th>
+				<th scope="col">Acciones</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			{% for libro in libros %}
+			<tr>
+				<th scope="row">{{ libro.libro.id }}</th>
+				<td><a href="{{ url_for('libro', libro_id=libro.libro.id) }}">{{ libro.libro.nombre }}</a></td>
+				<td>{{libro.genero.nombre}}</td>
+				<td><a href="{{ url_for('autor', autor_id=libro.autor.id) }}">{{ libro.autor.nombre }}</a></td>
+				<td>
+					{% if libro.libro.activo == 1 %}
+						Habilitado
+					{% else %}
+						Deshabilitado
+					{% endif %}
+				</td>
+				<td>
+					<a
+						class="material-icons btn btn-primary"
+						title="Ver"
+						href="{{ url_for('libro', libro_id=libro.libro.id) }}"
+					>visibility</a>
+
+					<a
+						class="material-icons btn btn-info"
+						title="Editar"
+						href="{{ url_for('libro_edit', libro_id=libro.libro.id) }}"
+					>edit</a>
+
+					{% if libro.libro.activo == 1 %}
+
+					<a
+						class="btn btn-danger text-white material-icons" data-toggle="modal" data-target="#exampleModal_{{libro.libro.id}}"
+					>delete</a>
+
+					<!-- https://stackoverflow.com/questions/40937631/modals-created-in-jinja-conditional-statement-are-all-showing-the-same-data -->
+					<!-- Modal -->
+					<div class="modal fade" id="exampleModal_{{libro.libro.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Deshabilitar Libro</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+
+								<div class="modal-body">
+									¿Estas seguro de que quieres deshablitar el libro?, puede que haya usuarios que estan leyendo el libro y todavía no lo completaron.
+								</div>
+
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>							
+									<a
+										class="btn btn-danger"
+										href="{{ url_for('libro_deshabilitar', libro_id=libro.libro.id) }}"
+									>Aceptar</a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{% else %}
+					<a
+						class="material-icons btn btn-success"
+						title="Eliminar"
+						href="{{ url_for('libro_habilitar', libro_id=libro.libro.id) }}"
+					>delete_forever</a>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+
+{% endblock %}
